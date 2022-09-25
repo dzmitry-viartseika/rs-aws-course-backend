@@ -1,8 +1,6 @@
-// import type { ValidatedEventAPIGatewayProxyEvent } from "@libs/api-gateway";
 import { formatJSONResponse } from "@libs/api-gateway";
 import { middyfy } from "@libs/lambda";
-
-// import schema from "./schema";
+import { IProduct } from '../../types/api-types';
 
 const products = [
     {
@@ -61,7 +59,7 @@ const products = [
         price: 15,
         title: "ProductName",
     },
-];
+] as IProduct[];
 
 const getProduct = async (event) => {
     const { id } = event.pathParameters;

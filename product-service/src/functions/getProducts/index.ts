@@ -7,7 +7,11 @@ export default {
             http: {
                 method: "get",
                 path: "products",
-                cors: true
+                cors: true,
+                documentation: {
+                    summary: 'Get product list',
+                    description: 'Get all products',
+                },
             },
         },
     ],

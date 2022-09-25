@@ -34,6 +34,9 @@ const serverlessConfiguration: AWS = {
       platform: 'node',
       concurrency: 10,
     },
+    autoswagger: {
+      typefiles: './src/types/product.d.ts',
+    },
   },
 };
 

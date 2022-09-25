@@ -1,7 +1,6 @@
 import { formatJSONResponse } from "@libs/api-gateway";
-import { middyfy } from "@libs/lambda";
-
-// import schema from "./schema";
+import { IProduct } from '../../types/api-types';
+import { middyfy } from '@libs/lambda';
 
 const products = [
     {
@@ -60,9 +59,9 @@ const products = [
         price: 15,
         title: "ProductName",
     },
-];
+] as IProduct[];
 
-const getProducts = async (event) => {
+const getProducts = async () => {
     return formatJSONResponse({
         data: products,
     });
