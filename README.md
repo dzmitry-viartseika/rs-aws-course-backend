@@ -19,5 +19,5 @@ GET_ALL https://o7393ulei4.execute-api.eu-west-1.amazonaws.com/dev/products
 # frontend PR
 https://github.com/wertey/rolling-scopes-aws-course/pull/2
 
-#frontend S3
-dzbuxj8ld8y5m.cloudfront.net
+# frontend S3
+https://dzbuxj8ld8y5m.cloudfront.net/
