@@ -1,10 +1,3 @@
-
-[//]: # (GET - https://vrsbboexy5.execute-api.eu-west-1.amazonaws.com/dev/products )
-
-[//]: # (GET - https://b30nsujrnd.execute-api.eu-west-1.amazonaws.com/swagger )
-
-[//]: # (GET - https://b30nsujrnd.execute-api.eu-west-1.amazonaws.com/swagger.json)
-
 # endpoints:
 GET - https://o7393ulei4.execute-api.eu-west-1.amazonaws.com/dev/products
 GET - https://o7393ulei4.execute-api.eu-west-1.amazonaws.com/dev/products/{id}
