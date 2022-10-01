@@ -17,7 +17,7 @@ Task 4.2:
 - Integrate the getProductsList lambda to return via GET /products request a list of products from the database (joined stocks and products tables).
   (My example: https://o7393ulei4.execute-api.eu-west-1.amazonaws.com/dev/products/)
 - Implement a Product model on FE side as a joined model of product and stock by productId.
-  (My example: https://o7393ulei4.execute-api.eu-west-1.amazonaws.com/dev/products/7567ec4b-b10c-48c5-9345-fc73c48a80aa)
+  (My example: https://o7393ulei4.execute-api.eu-west-1.amazonaws.com/dev/products/1fb5c6c4-3d1e-4d80-8829-847576f5b367)
 - Integrate the getProductsById lambda to return via GET /products/{productId} request a single product from the database (My example is above)
 Task 4.3:
 - Create a lambda function called createProduct
