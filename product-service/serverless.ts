@@ -1,9 +1,9 @@
 import type { AWS } from '@serverless/typescript';
-
-// import getProducts from "@functions/getProducts";
-// import getProduct from "@functions/getProduct";
+import addStock from "@functions/addStock";
+import getProduct from "@functions/getProduct";
 import addProduct from "@functions/addProduct";
 import getProductList from "@functions/getProductList";
+require('dotenv').config();
 
 const serverlessConfiguration: AWS = {
   service: 'product-service',
@@ -22,8 +22,8 @@ const serverlessConfiguration: AWS = {
                 'dynamodb:Scan',
             ],
             Resource: [
-              'arn:aws:dynamodb:${self:provider.region}:${self:provider.environment.AWS_ACCOUNT_ID}:table/${self:provider.environment.BLOG_TABLE}',
-              'arn:aws:dynamodb:${self:provider.region}:${self:provider.environment.AWS_ACCOUNT_ID}:table/${self:provider.environment.BLOG_TABLE2}'
+              'arn:aws:dynamodb:${self:provider.region}:${self:provider.environment.AWS_ACCOUNT_ID}:table/${self:provider.environment.PRODUCTS_TABLE}',
+              'arn:aws:dynamodb:${self:provider.region}:${self:provider.environment.AWS_ACCOUNT_ID}:table/${self:provider.environment.STOCK_TABLE}'
             ]
           }
         ],
@@ -34,14 +34,13 @@ const serverlessConfiguration: AWS = {
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
-      BLOG_TABLE:'product-table',
-      BLOG_TABLE2:'product-table2',
-      AWS_ACCOUNT_ID:'262156182844',
+      PRODUCTS_TABLE: 'products-table',
+      STOCK_TABLE: 'stock-table',
+      AWS_ACCOUNT_ID: process.env.AWS_ACCOUNT_ID,
     },
     lambdaHashingVersion: '20201221',
   },
-  // import the function via paths
-  functions: { addProduct, getProductList },
+  functions: { addProduct, getProductList, getProduct, addStock },
   package: { individually: true },
   custom: {
     esbuild: {
@@ -54,34 +53,34 @@ const serverlessConfiguration: AWS = {
       platform: 'node',
       concurrency: 10,
     },
-    autoswagger: {
-      typefiles: './src/types/product.d.ts',
-    },
+    // autoswagger: {
+    //   typefiles: './src/types/product.d.ts',
+    // },
   },
   resources:{
     Resources:{
-      productTable:{
+      productsTable:{
         Type:"AWS::DynamoDB::Table",
         Properties:{
-          TableName:"product-table",
+          TableName:"products-table",
           AttributeDefinitions:[
-            {AttributeName:'author', AttributeType:'S'},
+            {AttributeName:'id', AttributeType:'S'},
           ],
           KeySchema:[
-            {AttributeName:'author', KeyType:'HASH'},
+            {AttributeName:'id', KeyType:'HASH'},
           ],
           BillingMode:'PAY_PER_REQUEST',
         },
       },
-      productTable2:{
+      stockTable:{
         Type:"AWS::DynamoDB::Table",
         Properties:{
-          TableName:"product-table2",
+          TableName:"stock-table",
           AttributeDefinitions:[
-            {AttributeName:'author', AttributeType:'S'},
+            {AttributeName:'product_id', AttributeType:'S'},
           ],
           KeySchema:[
-            {AttributeName:'author', KeyType:'HASH'},
+            {AttributeName:'product_id', KeyType:'HASH'},
           ],
           BillingMode:'PAY_PER_REQUEST',
         },

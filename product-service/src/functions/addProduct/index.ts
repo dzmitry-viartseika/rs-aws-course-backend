@@ -6,7 +6,7 @@ export default {
         {
             http: {
                 method: "post",
-                path: "add",
+                path: "products",
                 cors: true,
                 documentation: {
                     summary: 'Add new product',

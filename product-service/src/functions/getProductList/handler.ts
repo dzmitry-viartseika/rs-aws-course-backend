@@ -6,38 +6,37 @@ const dynamodb = new AWS.DynamoDB.DocumentClient();
 
 const getProductList = async () => {
 
-    const output2 = await dynamodb.scan({
-        TableName:'product-table2',
+    const stockTable = await dynamodb.scan({
+        TableName:'stock-table',
     }).promise()
 
-    const output = await dynamodb.scan({
-        TableName:'product-table',
+    const productTable = await dynamodb.scan({
+        TableName:'products-table',
     }).promise()
 
-    if (output.Items && output2.Items) {
+    if (productTable.Items && stockTable.Items) {
         const result = []
-        output.Items.forEach((element) => {
-            output2.Items.forEach((el) => {
-                if (element.id === el.author) {
+        productTable.Items.forEach((element) => {
+            stockTable.Items.forEach((el) => {
+                if (element.id === el.product_id) {
+
                     const obj = {
                         ...element,
                         ...el,
                     }
-
+                    obj.product_id = undefined
                     result.push(obj)
                 }
             })
         })
+        console.log('getProductsList result', result)
         return formatJSONResponse({
             data: result,
         });
     }
 
     return formatJSONResponse({
-        message: {
-            output,
-            output2,
-        },
+        message: 'SOMETHING WRONG',
     });
 }
 

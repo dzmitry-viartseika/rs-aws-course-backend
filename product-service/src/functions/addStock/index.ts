@@ -5,12 +5,12 @@ export default {
     events: [
         {
             http: {
-                method: "get",
-                path: "products",
+                method: "post",
+                path: "stock",
                 cors: true,
                 documentation: {
-                    summary: 'Get product list',
-                    description: 'Get all products',
+                    summary: 'Add new stock',
+                    description: 'Add new stock',
                 },
             },
         },

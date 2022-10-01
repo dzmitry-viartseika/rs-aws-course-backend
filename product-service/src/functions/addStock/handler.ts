@@ -4,46 +4,39 @@ import * as AWS from 'aws-sdk';
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
-const addProduct = async (event) => {
+const addStock = async (event) => {
     try {
-        // @ts-ignore
-        const data = event.body;
+        const data = event.body
 
-        if (!data.hasOwnProperty('title') || !data.hasOwnProperty('description') ||
-            !data.hasOwnProperty('price') || !data.hasOwnProperty('id')) {
+        console.log('AddStock data', data)
+
+        if (!data.hasOwnProperty('product_id') || !data.hasOwnProperty('count')) {
             return formatJSONResponse({
                 statusCode: 400,
                 message: 'Product data is invalid'
             });
         }
 
-        console.log('addProduct data', data)
-
         const blogParams = {
-            TableName:'products-table',
+            TableName:'stock-table',
             Item: {
-                "description": data.description,
-                "id": data.id,
-                "price": data.price,
-                "title": data.title
+                'product_id': data.product_id,
+                'count': data.count,
             }
         }
 
-        console.log('event', event)
-
         const result = await dynamodb.put(blogParams).promise()
 
-        console.log('addProduct result', result)
+        console.log('AddStock result', result)
 
-        if (Object.keys(result).length) {
+        if (result) {
             return formatJSONResponse({
                 data: blogParams,
             });
         }
 
         return formatJSONResponse({
-            statusCode: 400,
-            message: 'Fill out required fields'
+            message: 'FATAL ERROR',
         });
     } catch (e) {
         return formatJSONResponse({
@@ -53,4 +46,4 @@ const addProduct = async (event) => {
     }
 }
 
-export const main = middyfy(addProduct);
+export const main = middyfy(addStock);
