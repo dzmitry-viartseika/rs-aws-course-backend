@@ -17,7 +17,7 @@ const addProduct = async (event) => {
             });
         }
 
-        console.log('addProduct data', data)
+        console.log('importProductsFile data', data)
 
         const blogParams = {
             TableName:'products-table',
@@ -33,7 +33,7 @@ const addProduct = async (event) => {
 
         const result = await dynamodb.put(blogParams).promise()
 
-        console.log('addProduct result', result)
+        console.log('importProductsFile result', result)
 
         if (Object.keys(result).length) {
             return formatJSONResponse({
