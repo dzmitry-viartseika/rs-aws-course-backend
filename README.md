@@ -35,3 +35,5 @@ Additional scope - logger, swagger, unit tests, transaction
 +1 (All languages) - All lambdas do console.log for each incoming requests and their arguments
 +1 (All languages) - POST /products lambda functions returns error 400 status code if product data is invalid
 +1 (All languages) - All lambdas return error 500 status code on any error (DB connection, any unhandled error in code)
+
+Score 8/10
