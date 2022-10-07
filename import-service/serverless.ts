@@ -10,20 +10,18 @@ const serverlessConfiguration: AWS = {
     name: 'aws',
     runtime: 'nodejs14.x',
     region: "eu-west-1",
-    // iamRoleStatements:
-    //     [
-    //       {
-    //         Effect:'Allow',
-    //         Action: [
-    //             'dynamodb:PutItem',
-    //             'dynamodb:Scan',
-    //         ],
-    //         Resource: [
-    //           'arn:aws:dynamodb:${self:provider.region}:${self:provider.environment.AWS_ACCOUNT_ID}:table/${self:provider.environment.PRODUCTS_TABLE}',
-    //           'arn:aws:dynamodb:${self:provider.region}:${self:provider.environment.AWS_ACCOUNT_ID}:table/${self:provider.environment.STOCK_TABLE}'
-    //         ]
-    //       }
-    //     ],
+    iamRoleStatements:
+        [
+          {
+            Effect:'Allow',
+            Action: [
+              'arn:aws:s3:::wertey-uploaded',
+            ],
+            Resource: [
+              'arn:aws:s3:${self:provider.region}:${self:provider.environment.AWS_ACCOUNT_ID}:table/${self:provider.environment.PRODUCTS_TABLE}',
+            ]
+          }
+        ],
     apiGateway: {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
