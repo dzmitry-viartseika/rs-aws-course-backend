@@ -1,27 +1,28 @@
 import type { AWS } from '@serverless/typescript';
-import importProductsFile from "@functions/importProductsFile";
+import importProductsFile from '@functions/importProductsFile';
+import importFileParser from '@functions/importFileParser';
 require('dotenv').config();
 
 const serverlessConfiguration: AWS = {
-  service: 'import-service',
+  service: 'import-service-wertey',
   frameworkVersion: '3',
   plugins: ['serverless-esbuild'],
   provider: {
     name: 'aws',
     runtime: 'nodejs14.x',
     region: "eu-west-1",
-    iamRoleStatements:
-        [
-          {
-            Effect:'Allow',
-            Action: [
-              'arn:aws:s3:::wertey-uploaded',
-            ],
-            Resource: [
-              'arn:aws:s3:${self:provider.region}:${self:provider.environment.AWS_ACCOUNT_ID}:table/${self:provider.environment.PRODUCTS_TABLE}',
-            ]
-          }
+    iamRoleStatements: [
+      {
+        Effect: 'Allow',
+        Action: [
+          "s3:ListBucket"
         ],
+        Resource: [
+          "arn:aws:s3:::${self:provider.environment.BUCKET_NAME}",
+          "arn:aws:s3:::${self:provider.environment.BUCKET_NAME}/*"
+        ]
+      }
+    ],
     apiGateway: {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
@@ -29,13 +30,10 @@ const serverlessConfiguration: AWS = {
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
-      PRODUCTS_TABLE: 'products-table',
-      STOCK_TABLE: 'stock-table',
-      AWS_ACCOUNT_ID: process.env.AWS_ACCOUNT_ID,
+      BUCKET_NAME: 'import-service-wertey'
     },
-    lambdaHashingVersion: '20201221',
   },
-  functions: { importProductsFile },
+  functions: { importProductsFile, importFileParser },
   package: { individually: true },
   custom: {
     esbuild: {

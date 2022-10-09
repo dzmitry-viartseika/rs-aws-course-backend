@@ -1,53 +1,33 @@
-import { formatJSONResponse } from "@libs/api-gateway";
-import { middyfy } from "@libs/lambda";
-// import * as AWS from 'aws-sdk';
+import type { ValidatedEventAPIGatewayProxyEvent } from '../../libs/api-gateway';
+import { middyfy } from '../../libs/lambda';
+import * as AWS from 'aws-sdk';
 
-// const dynamodb = new AWS.DynamoDB.DocumentClient();
+const importProductsFile: ValidatedEventAPIGatewayProxyEvent<any> = async (event) => {
+    const S3 = new AWS.S3({region: 'eu-west-1', signatureVersion: 'v4' })
+    const fileName = event.queryStringParameters.name;
+    console.log('LOG: file name: ', fileName);
 
-const importProductsFile = async (event) => {
-
-    const { name } = event.pathParameters;
-
-    console.log('name', name)
-
-    try {
-        console.log('importProductsFile')
-    } catch (e) {
-      console.error(e)
+    const signedUrlParams = {
+        Bucket: 'import-service-wertey',
+        Key: `uploaded/${fileName}`
     }
 
-    // const stockTable = await dynamodb.scan({
-    //     TableName:'stock-table',
-    // }).promise()
-    //
-    // const productTable = await dynamodb.scan({
-    //     TableName:'products-table',
-    // }).promise()
-    //
-    // if (productTable.Items && stockTable.Items) {
-    //     const result = []
-    //     productTable.Items.forEach((element) => {
-    //         stockTable.Items.forEach((el) => {
-    //             if (element.id === el.product_id) {
-    //
-    //                 const obj = {
-    //                     ...element,
-    //                     ...el,
-    //                 }
-    //                 obj.product_id = undefined
-    //                 result.push(obj)
-    //             }
-    //         })
-    //     })
-    //     console.log('getProductsList result', result)
-    //     return formatJSONResponse({
-    //         data: result,
-    //     });
-    // }
+    try {
+        const signedUrl = S3.getSignedUrl('putObject', signedUrlParams)
 
-    return formatJSONResponse({
-        message: 'SOMETHING WRONG',
-    });
-}
+        return {
+            statusCode: 200,
+            headers: {
+                'access-control-allow-origin': '*'
+            },
+            body: JSON.stringify({url: `${signedUrl}`})
+        }
+    } catch(e) {
+        return {
+            statusCode: 500,
+            body: JSON.stringify('Something went wrong')
+        }
+    }
+};
 
 export const main = middyfy(importProductsFile);
