@@ -7,7 +7,7 @@ export default {
         {
             sqs: {
                 batchSize: 5,
-                arn: "arn:aws:sqs:eu-west-1:262156182844:catalogItemsQueue",
+                arn: "arn:aws:sqs:${self:provider.region}:${aws:accountId}:catalogItemsQueue",
             },
         },
     ],

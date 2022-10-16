@@ -8,7 +8,6 @@ const BUCKET_NAME = 'import-service-wertey';
 
 const importFileParser: any =  async (event) => {
     const promises = event.Records.map((record) => {
-        console.log('w')
         return new Promise(() => {
             const params = { Bucket: BUCKET_NAME, Key: record.s3.object.key }
             const file = S3.getObject(params).createReadStream();
