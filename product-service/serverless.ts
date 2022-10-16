@@ -28,7 +28,7 @@ const serverlessConfiguration: AWS = {
             Effect: "Allow",
             Action: "sns:*",
             Resource:
-                "arn:aws:sns:${self:provider.region}:${aws:accountId}:create-product-topic",
+                "arn:aws:sns:${self:provider.region}:${aws:accountId}:${self:custom.topicName}",
           },
         ],
     apiGateway: {
@@ -41,10 +41,8 @@ const serverlessConfiguration: AWS = {
       PRODUCTS_TABLE: 'products-table',
       STOCK_TABLE: 'stock-table',
       AWS_ACCOUNT_ID: process.env.AWS_ACCOUNT_ID,
-      snsTopic: "create-product-topic",
+      snsTopic: "createProductTopic",
       snsArn: "arn:aws:sns:${self:provider.region}:${aws:accountId}:create-product-topic",
-      SQS_QUEUE_NAME: 'catalogItemsQueue',
-      SNS_TOPIC_NAME: 'createProductTopic',
     },
     lambdaHashingVersion: '20201221',
   },

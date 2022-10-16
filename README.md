@@ -3,7 +3,6 @@
 https://dzbuxj8ld8y5m.cloudfront.net/admin/products
 
 # What was done?
-FE: https://d14wkrl4r3kxg1.cloudfront.net/admin/products
 
 ![img.png](img.png)
 
