@@ -43,8 +43,8 @@ const serverlessConfiguration: AWS = {
       AWS_ACCOUNT_ID: process.env.AWS_ACCOUNT_ID,
       snsTopic: "create-product-topic",
       snsArn: "arn:aws:sns:${self:provider.region}:${aws:accountId}:create-product-topic",
-      SQS_QUEUE_NAME: 'catalog-items-queue',
-      SNS_TOPIC_NAME: 'create-product-topic',
+      SQS_QUEUE_NAME: 'catalogItemsQueue',
+      SNS_TOPIC_NAME: 'createProductTopic',
     },
     lambdaHashingVersion: '20201221',
   },
@@ -95,13 +95,13 @@ const serverlessConfiguration: AWS = {
       SNSTopic: {
         Type: 'AWS::SNS::Topic',
         Properties: {
-          TopicName: '${self:provider.environment.SNS_TOPIC_NAME}'
+          TopicName: "create-product-topic"
         }
       },
       SNSSubscription: {
         Type: 'AWS::SNS::Subscription',
         Properties: {
-          Endpoint: 'verteyko1990@gmail.com',
+          Endpoint: 'wertey199011@gmail.com',
           Protocol: 'email',
           TopicArn: {
             Ref: 'SNSTopic'

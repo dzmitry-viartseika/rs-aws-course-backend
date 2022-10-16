@@ -34,8 +34,7 @@ const catalogBatchProcess = async (
         await dynamo.batchWrite(batchData)
 
         const SNS = new AWS.SNS({region: 'eu-west-1'})
-
-
+        console.log('wer')
         try {
             await SNS.publish({
                 Subject: 'New product has been added',
