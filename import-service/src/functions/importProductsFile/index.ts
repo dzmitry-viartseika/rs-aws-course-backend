@@ -15,6 +15,7 @@ export default {
                     }
                 },
                 cors: true,
+                authorizer: 'basicImportAuthorizer',
                 documentation: {
                     summary: 'Get import file link',
                     description: 'Get link of file',
