@@ -3,6 +3,7 @@ import addStock from "@functions/addStock";
 import getProduct from "@functions/getProduct";
 import addProduct from "@functions/addProduct";
 import getProductList from "@functions/getProductList";
+import catalogBatchProcess from "@functions/catalogBatchProcess";
 require('dotenv').config();
 
 const serverlessConfiguration: AWS = {
@@ -17,15 +18,18 @@ const serverlessConfiguration: AWS = {
         [
           {
             Effect:'Allow',
-            Action: [
-                'dynamodb:PutItem',
-                'dynamodb:Scan',
-            ],
+            Action: "dynamodb:*",
             Resource: [
               'arn:aws:dynamodb:${self:provider.region}:${self:provider.environment.AWS_ACCOUNT_ID}:table/${self:provider.environment.PRODUCTS_TABLE}',
               'arn:aws:dynamodb:${self:provider.region}:${self:provider.environment.AWS_ACCOUNT_ID}:table/${self:provider.environment.STOCK_TABLE}'
             ]
-          }
+          },
+          {
+            Effect: "Allow",
+            Action: "sns:*",
+            Resource:
+                "arn:aws:sns:${self:provider.region}:${aws:accountId}:${self:custom.topicName}",
+          },
         ],
     apiGateway: {
       minimumCompressionSize: 1024,
@@ -37,12 +41,15 @@ const serverlessConfiguration: AWS = {
       PRODUCTS_TABLE: 'products-table',
       STOCK_TABLE: 'stock-table',
       AWS_ACCOUNT_ID: process.env.AWS_ACCOUNT_ID,
+      snsTopic: "createProductTopic",
+      snsArn: "arn:aws:sns:${self:provider.region}:${aws:accountId}:create-product-topic",
     },
     lambdaHashingVersion: '20201221',
   },
-  functions: { addProduct, getProductList, getProduct, addStock },
+  functions: { addProduct, getProductList, getProduct, addStock, catalogBatchProcess },
   package: { individually: true },
   custom: {
+    topicName: "create-product-topic",
     esbuild: {
       bundle: true,
       minify: false,
@@ -53,12 +60,10 @@ const serverlessConfiguration: AWS = {
       platform: 'node',
       concurrency: 10,
     },
-    // autoswagger: {
-    //   typefiles: './src/types/product.d.ts',
-    // },
+    autoswagger: {},
   },
-  resources:{
-    Resources:{
+  resources: {
+    Resources: {
       productsTable:{
         Type:"AWS::DynamoDB::Table",
         Properties:{
@@ -84,7 +89,23 @@ const serverlessConfiguration: AWS = {
           ],
           BillingMode:'PAY_PER_REQUEST',
         },
-      }
+      },
+      SNSTopic: {
+        Type: 'AWS::SNS::Topic',
+        Properties: {
+          TopicName: "create-product-topic"
+        }
+      },
+      SNSSubscription: {
+        Type: 'AWS::SNS::Subscription',
+        Properties: {
+          Endpoint: 'wertey199011@gmail.com',
+          Protocol: 'email',
+          TopicArn: {
+            Ref: 'SNSTopic'
+          }
+        }
+      },
     }
   }
 };

@@ -12,7 +12,9 @@
   "dependencies": {
     "@middy/core": "^2.5.3",
     "@middy/http-json-body-parser": "^2.5.3",
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "@aws-sdk/client-dynamodb": "^3.76.0",
+    "@aws-sdk/lib-dynamodb": "^3.76.0"
   },
   "devDependencies": {
     "@serverless/typescript": "^3.0.0",

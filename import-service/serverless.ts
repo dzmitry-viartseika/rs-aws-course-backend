@@ -7,6 +7,16 @@ const serverlessConfiguration: AWS = {
   service: 'import-service-wertey',
   frameworkVersion: '3',
   plugins: ['serverless-esbuild'],
+  resources: {
+    Resources: {
+      SQSQueue: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName: "catalogItemsQueue"
+        }
+      }
+    }
+  },
   provider: {
     name: 'aws',
     runtime: 'nodejs14.x',
@@ -21,6 +31,11 @@ const serverlessConfiguration: AWS = {
           "arn:aws:s3:::${self:provider.environment.BUCKET_NAME}",
           "arn:aws:s3:::${self:provider.environment.BUCKET_NAME}/*"
         ]
+      },
+      {
+        Effect: "Allow",
+        Action: "sqs:*",
+        Resource: [{'Fn::GetAtt': ['SQSQueue', 'Arn']}]
       }
     ],
     apiGateway: {
@@ -30,7 +45,10 @@ const serverlessConfiguration: AWS = {
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
-      BUCKET_NAME: 'import-service-wertey'
+      BUCKET_NAME: 'import-service-wertey',
+      SQSUrl: {
+        Ref: 'SQSQueue'
+      }
     },
   },
   functions: { importProductsFile, importFileParser },

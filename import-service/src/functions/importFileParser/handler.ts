@@ -1,12 +1,13 @@
 import { middyfy } from '@libs/lambda';
-import * as AWS from 'aws-sdk';
+import * as AWS from "aws-sdk";
 const csv = require('csv-parser');
 const S3 = new AWS.S3({region: 'eu-west-1', signatureVersion: 'v4' });
+const sqs = new AWS.SQS();
 const BUCKET_NAME = 'import-service-wertey';
+
 
 const importFileParser: any =  async (event) => {
     const promises = event.Records.map((record) => {
-
         return new Promise(() => {
             const params = { Bucket: BUCKET_NAME, Key: record.s3.object.key }
             const file = S3.getObject(params).createReadStream();
@@ -15,6 +16,7 @@ const importFileParser: any =  async (event) => {
                 .pipe(csv())
                 .on('data', (data) => {
                     console.log('LOG: data row: ',data);
+                    sqs.sendMessage({ MessageBody: JSON.stringify(data), QueueUrl: 'https://sqs.eu-west-1.amazonaws.com/262156182844/catalogItemsQueue' }).promise()
                 })
                 .on('end', async () => {
                     console.log('LOG: copying the file: ', record.s3.object.key);
