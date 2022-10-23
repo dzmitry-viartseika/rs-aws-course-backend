@@ -1,6 +1,7 @@
 import type { AWS } from '@serverless/typescript';
 import importProductsFile from '@functions/importProductsFile';
 import importFileParser from '@functions/importFileParser';
+
 require('dotenv').config();
 
 const serverlessConfiguration: AWS = {
@@ -14,7 +15,7 @@ const serverlessConfiguration: AWS = {
         Properties: {
           QueueName: "catalogItemsQueue"
         }
-      }
+      },
     }
   },
   provider: {
@@ -41,19 +42,6 @@ const serverlessConfiguration: AWS = {
     apiGateway: {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
-    },
-    httpApi: {
-      cors: true,
-      shouldStartNameWithService: true,
-      authorizers: {
-        basicImportAuthorizer: {
-          payloadVersion: '2.0',
-          functionArn: 'arn:aws:execute-api:eu-west-1:262156182844:7fy8bifhjj/*/GET/import',
-          type: 'request',
-          identitySource: ['$request.header.Authorization'],
-          resultTtlInSeconds: 0,
-        }
-      }
     },
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',

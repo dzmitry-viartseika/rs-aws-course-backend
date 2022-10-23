@@ -1,12 +1,17 @@
 import type { AWS } from '@serverless/typescript';
+import * as dotenv from 'dotenv';
+dotenv.config();
+
+import basicAuthorizer from '@functions/basicAuthorizer';
 
 const serverlessConfiguration: AWS = {
-  service: 'authorization-service',
+  service: 'authorization-service-aws',
   frameworkVersion: '3',
   plugins: ['serverless-esbuild'],
   provider: {
     name: 'aws',
     runtime: 'nodejs14.x',
+    region: 'eu-west-1',
     apiGateway: {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
@@ -14,14 +19,10 @@ const serverlessConfiguration: AWS = {
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
+      dzmitryViartseika: 'dzmitryViartseika',
     },
   },
-  functions: {
-    basicAuthorizer: {
-      handler: 'src/functions/basicAuthorizer/handler.basicAuthorizer',
-      description: 'Authorizer for API Gateway',
-    },
-  },
+  functions: { basicAuthorizer },
   package: { individually: true },
   custom: {
     esbuild: {

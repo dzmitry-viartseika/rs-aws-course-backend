@@ -5,7 +5,7 @@ import * as AWS from 'aws-sdk';
 const importProductsFile: ValidatedEventAPIGatewayProxyEvent<any> = async (event) => {
     const S3 = new AWS.S3({region: 'eu-west-1', signatureVersion: 'v4' })
     const fileName = event.queryStringParameters.name;
-    console.log('LOG: file name: ', fileName);
+    console.log('LOG: file name 2: ', fileName);
 
     const signedUrlParams = {
         Bucket: 'import-service-wertey',

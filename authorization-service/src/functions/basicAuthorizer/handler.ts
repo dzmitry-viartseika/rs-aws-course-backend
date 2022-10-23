@@ -1,49 +1,44 @@
-import type { APIGatewayIAMAuthorizerResult, APIGatewayRequestIAMAuthorizerHandlerV2 } from 'aws-lambda';
+import { APIGatewayTokenAuthorizerEvent } from 'aws-lambda';
 
-const parseAuthToken = (authToken: unknown): { userName: string; password: string } | null => {
-    console.log('tokenAuth')
-    if (typeof authToken !== 'string') return null;
+const basicAuthorizer= async (event: APIGatewayTokenAuthorizerEvent, _ctx, cb) => {
+    console.log(event, 'EVENT');
 
-    const decodedToken = Buffer.from(authToken, 'base64').toString('ascii');
-    const [userName, password] = decodedToken.split(':');
+    if (event['type'] != 'TOKEN')  cb('Unauthorized')
+    try {
+        const authorizationToken = event.authorizationToken;
+        const encodedCreds = authorizationToken.split(' ')[1];
+        const buff = Buffer.from(encodedCreds, 'base64');
+        const plainCreds = buff.toString('utf-8').split(':');
+        const [userName, password] = plainCreds;
+        console.log('process.env[userName]', process.env[userName]);
+        console.log('userName`', userName);
+        console.log('password', password);
+        const storedUserPassword = process.env[userName]
+        console.log('storedUserPassword', storedUserPassword)
+        console.log('condition', storedUserPassword !== password)
+        const effect = !storedUserPassword || storedUserPassword !== password ? 'Deny' : 'Allow';
 
-    if (!userName || !password) return null;
+        const policy = generatePolicy(encodedCreds, event.methodArn, effect)
 
-    return { userName, password };
+        cb(null, policy)
+
+    } catch (error) {
+        cb(`Unauthorized: ${error.message}`)
+    }
 };
 
-const getAuthorizerOutput = (action: 'Allow' | 'Deny', arn: string, userName?: string): APIGatewayIAMAuthorizerResult => {
+const generatePolicy = (principalId, resource, effect = 'Allow') => {
     return {
-        principalId: userName ?? 'user',
+        principalId,
         policyDocument: {
             Version: '2012-10-17',
-            Statement: [
-                {
-                    Action: 'execute-api:Invoke',
-                    Effect: action,
-                    Resource: arn,
-                },
-            ],
+            Statement: {
+                Action: 'execute-api:Invoke',
+                Effect: effect,
+                Resource: resource,
+            },
         },
     };
 };
 
-export const basicAuthorizer: APIGatewayRequestIAMAuthorizerHandlerV2 = async (event) => {
-    try {
-        const [authHeaderValue] = event.identitySource;
-        const [authType, authToken] = authHeaderValue.split(' ');
-        if (typeof authType !== 'string' || authType.toLowerCase() !== 'basic') return getAuthorizerOutput('Deny', event.routeArn);
-
-        const tokenData = parseAuthToken(authToken);
-        if (!tokenData) return getAuthorizerOutput('Deny', event.routeArn);
-
-        const { userName, password } = tokenData;
-        const isPasswordCorrect = process.env[userName] === password;
-        if (!isPasswordCorrect) return getAuthorizerOutput('Deny', event.routeArn);
-
-        return getAuthorizerOutput('Allow', event.routeArn, userName);
-    } catch (e) {
-        console.log('Internal server error appeared', e);
-        return getAuthorizerOutput('Deny', event.routeArn);
-    }
-};
+export const main = basicAuthorizer;
