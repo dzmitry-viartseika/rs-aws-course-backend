@@ -7,13 +7,7 @@ export default {
             http: {
                 method: 'get',
                 path: 'import',
-                request: {
-                    parameters: {
-                        querystrings: {
-                            name: true
-                        }
-                    }
-                },
+                cors: true,
                 authorizer: {
                     name: 'basicAuthorizer',
                     type: 'token',
@@ -21,7 +15,13 @@ export default {
                     resultTtlInSeconds: 0,
                     identitySource: 'method.request.header.Authorization'
                 },
-                cors: true,
+                request: {
+                    parameters: {
+                        querystrings: {
+                            name: true
+                        }
+                    }
+                },
                 documentation: {
                     summary: 'Get import file link',
                     description: 'Get link of file',
