@@ -13,7 +13,8 @@ const basicAuthorizer= async (event: APIGatewayTokenAuthorizerEvent, _ctx, cb) =
         const [userName, password] = plainCreds;
         console.log('userName', userName);
         console.log('password', password);
-        const storedUserPassword = 'TEST_PASSWORD'
+        // const storedUserPassword = 'TEST_PASSWORD'
+        const storedUserPassword = process.env[userName]
         console.log('storedUserPassword', storedUserPassword)
         const effect = !storedUserPassword || storedUserPassword !== password ? 'Deny' : 'Allow';
 
