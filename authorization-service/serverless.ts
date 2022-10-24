@@ -7,7 +7,8 @@ import basicAuthorizer from '@functions/basicAuthorizer';
 const serverlessConfiguration: AWS = {
   service: 'authorization-service-aws',
   frameworkVersion: '3',
-  plugins: ['serverless-esbuild'],
+  plugins: ['serverless-esbuild', 'serverless-dotenv-plugin'],
+  useDotenv: true,
   provider: {
     name: 'aws',
     runtime: 'nodejs14.x',

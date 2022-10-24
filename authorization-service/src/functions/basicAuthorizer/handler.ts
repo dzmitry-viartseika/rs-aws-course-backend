@@ -9,13 +9,8 @@ const basicAuthorizer= async (event: APIGatewayTokenAuthorizerEvent, _ctx, cb) =
         const encodedCreds = authorizationToken.split(' ')[1];
         const buff = Buffer.from(encodedCreds, 'base64');
         const plainCreds = buff.toString('utf-8').split(':');
-        console.log('plainCreds', plainCreds)
         const [userName, password] = plainCreds;
-        console.log('userName', userName);
-        console.log('password', password);
-        // const storedUserPassword = 'TEST_PASSWORD'
         const storedUserPassword = process.env[userName]
-        console.log('storedUserPassword', storedUserPassword)
         const effect = !storedUserPassword || storedUserPassword !== password ? 'Deny' : 'Allow';
 
         const policy = generatePolicy(encodedCreds, event.methodArn, effect)
