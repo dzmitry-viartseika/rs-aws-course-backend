@@ -1,6 +1,7 @@
 import type { AWS } from '@serverless/typescript';
 import importProductsFile from '@functions/importProductsFile';
 import importFileParser from '@functions/importFileParser';
+
 require('dotenv').config();
 
 const serverlessConfiguration: AWS = {
@@ -14,7 +15,7 @@ const serverlessConfiguration: AWS = {
         Properties: {
           QueueName: "catalogItemsQueue"
         }
-      }
+      },
     }
   },
   provider: {

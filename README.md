@@ -1,15 +1,7 @@
+BE import endpoint: https://2v2l3vma9k.execute-api.eu-west-1.amazonaws.com/dev/import
+FE app link: https://dzbuxj8ld8y5m.cloudfront.net/admin/products
 
-# frontend S3
-https://dzbuxj8ld8y5m.cloudfront.net/admin/products
+test header to check: Authorization: Basic dmlhcnRzZWlrYTpURVNUX1BBU1NXT1JE
+FE PR: https://github.com/dzmitry-viartseika/rolling-scopes-aws-course/pull/5/files
 
-# What was done?
-
-![img.png](img.png)
-
-Not implemented:
-
-unit tests
-email filter
-
-# Score
-Score 4/6
+overall score 6/6
