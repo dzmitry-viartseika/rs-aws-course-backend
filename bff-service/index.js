@@ -18,6 +18,7 @@ const cacheResponse = (status, data) => {
 app.all('/*', async (req, res) => {
     const { method, path, originalUrl, body, headers } = req;
     const destination = path.split('/')[1];
+    console.log('destination', destination)
     const targetEndpoint = process.env[destination];
 
     if (!targetEndpoint) {
